@@ -26,9 +26,13 @@ routes:
 
 Note that the "action" parameter is optionnal, if it is not provided the router will try to call a "render()" function with no parameters
 
-Create a new router :
+Then create a new router :
 ````php
 $router = new DiggyRouter\Router()
+````
+Load your routes into the router :
+````php
+$router->loadRoutes("path/to/your/routing.yml");
 ````
 Use the router to call the correct function in the correct controller according to the requested URI :
 ````php
