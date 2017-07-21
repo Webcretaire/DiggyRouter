@@ -47,8 +47,7 @@ class Router
     {
         $toCreate = $route->getController();
         $controller = new $toCreate();
-        $action = $route->getAction();
-        $toPerform = !is_null($action) ? $action->getAction() : $this->defaultValues['action'];
+        $toPerform = !is_null($route->getAction()) ? $route->getAction()->getAction() : $this->defaultValues['action'];
         $controller->$toPerform();
     }
 }
