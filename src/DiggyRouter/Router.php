@@ -45,12 +45,10 @@ class Router
      */
     private function useRoute($route)
     {
-        $controller = new ($route->getController())();
+        $toCreate = $route->getController();
+        $controller = new $toCreate();
         $action = $route->getAction();
         $toPerform = !is_null($action) ? $action->getAction() : $this->defaultValues['action'];
-
-        if(!is_null($action)) {
-            $controller->$toPerform();
-        }
+        $controller->$toPerform();
     }
 }
