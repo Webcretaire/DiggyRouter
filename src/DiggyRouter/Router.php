@@ -27,7 +27,7 @@ class Router
     /**
      * @return bool
      */
-    public function matchRequest($uri = null)
+    public function handleRequest($uri = null)
     {
         if(is_null($uri))
         {
@@ -62,7 +62,7 @@ class Router
     {
         $toCreate = $route->getController();
         $controller = new $toCreate();
-        $toPerform = !is_null($route->getAction()) ? $route->getAction()->getAction() : $this->defaultValues['action'];
+        $toPerform = !is_null($route->getAction()) ? $route->getAction()->getFunction() : $this->defaultValues['action'];
         $controller->$toPerform();
     }
 

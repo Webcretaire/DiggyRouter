@@ -8,7 +8,34 @@ composer require webcretaire/diggy-router
 ```
 
 ## Usage
+First you have to register the routes you want to use in a YAML file with the following structure :
+````yaml
+routes:
+  # First Route
+  - uri: '/addressOfYourPage'
+    controller: 'Name\Of\A\Class'
+    action: 
+      action: 'nameOfTheFunctionToCall'
+  # Second Route
+  - uri: '/addressOfYourSecondPage'
+      controller: 'Name\Of\A\Class'
+      action: 
+        function: 'nameOfTheFunctionToCall'
+  # ...
+````
+
+Note that the "action" parameter is optionnal, if it is not provided the router will try to call a "render()" function with no parameters
+
 Create a new router :
 ````php
 $router = new DiggyRouter\Router()
+````
+Use the router to call the correct function in the correct controller according to the requested URI :
+````php
+$router->handleRequest();
+````
+By default the router tries to find a route that matches the requested URI which is stored in 
+```$_SERVER['REQUEST_URI']```, but you can specify the URI to use by passing it to the function :
+````php
+$router->handleRequest($customURI);
 ````
