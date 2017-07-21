@@ -1,0 +1,14 @@
+{
+    "name": "webcretaire/diggy-router",
+    "description": "Simple routing component for PHP",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Julien EMMANUEL",
+            "email": "JuEm0406@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
