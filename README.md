@@ -8,7 +8,7 @@ composer require webcretaire/diggy-router
 ```
 
 ## Usage
-Instantiate a router :
+Create a new router :
 ````php
 $router = new DiggyRouter\Router()
 ````

@@ -25,10 +25,25 @@ class Router
     }
 
     /**
+     * @return bool
+     */
+    public function matchRequest($uri = null)
+    {
+        if(is_null($uri))
+        {
+            $uri = $_SERVER['REQUEST_URI'];
+        }
+
+        $cleanURI = $this->removeURIParams($uri);
+
+        return $this->matchURI($cleanURI);
+    }
+
+    /**
      * @param string $uri
      * @return bool
      */
-    public function matchRequest($uri)
+    public function matchURI($uri)
     {
         $key = array_search($uri, array_column($this->routingData['routes'], 'uri'));
         if($key !== false)
@@ -49,5 +64,17 @@ class Router
         $controller = new $toCreate();
         $toPerform = !is_null($route->getAction()) ? $route->getAction()->getAction() : $this->defaultValues['action'];
         $controller->$toPerform();
+    }
+
+    /**
+     * @param string $uri
+     * @return string
+     */
+    public function removeURIParams($uri)
+    {
+        if(!strpos($uri, '?')) {
+            return $uri;
+        }
+        return strstr ( $uri , '?', true);
     }
 }
