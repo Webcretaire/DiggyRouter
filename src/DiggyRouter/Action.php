@@ -16,23 +16,23 @@ namespace DiggyRouter;
  */
 class Action
 {
-    private $action;
+    private $function;
     private $parameters;
 
     use DataFromYAMLTrait;
 
     public function __construct($actionData)
     {
-        $this->loadAttribute('action', $actionData);
+        $this->loadAttribute('function', $actionData);
         $this->loadAttribute('parameters', $actionData);
     }
 
     /**
      * @return string
      */
-    public function getAction()
+    public function getFunction()
     {
-        return $this->action;
+        return $this->function;
     }
 
 
