@@ -9,20 +9,32 @@ namespace DiggyRouter;
  */
 class Route
 {
+    /**
+     * @var string
+     */
     private $uri;
+
+    /**
+     * @var string
+     */
     private $controller;
+
+    /**
+     * @var string
+     */
     private $action;
 
     use DataFromYAMLTrait;
 
+    /**
+     * Route constructor.
+     * @param array $routeData
+     */
     public function __construct($routeData)
     {
         $this->loadAttribute('uri', $routeData);
         $this->loadAttribute('controller', $routeData);
-        if($this->checkAtribute($routeData, 'action'))
-        {
-            $this->action = new Action($routeData['action']);
-        }
+        $this->loadAttribute('action', $routeData);
     }
 
     /**
@@ -34,7 +46,7 @@ class Route
     }
 
     /**
-     * @return Action
+     * @return string
      */
     public function getAction()
     {

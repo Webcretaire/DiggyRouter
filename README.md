@@ -14,13 +14,11 @@ routes:
   # First Route
   - uri: '/addressOfYourPage'
     controller: 'Name\Of\A\Class'
-    action: 
-      action: 'nameOfTheFunctionToCall'
+    action: 'nameOfTheFunctionToCall'
   # Second Route
   - uri: '/addressOfYourSecondPage'
-      controller: 'Name\Of\A\Class'
-      action: 
-        function: 'nameOfTheFunctionToCall'
+    controller: 'Name\Of\A\Class'
+    action: 'nameOfTheFunctionToCall'
   # ...
 ````
 
