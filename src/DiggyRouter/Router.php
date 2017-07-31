@@ -1,4 +1,5 @@
 <?php
+
 namespace DiggyRouter;
 
 use Symfony\Component\Yaml\Yaml;
@@ -63,9 +64,19 @@ class Router
     public function matchURI(string $uri): bool
     {
         foreach ($this->routingData['routes'] as $key => $path) {
-            if ($route = $this->checkSinglePath($this->routingData['routes'][$key], $uri)) {
-                $this->useRoute($route);
-                return true;
+            $currentPath = $this->routingData['routes'][$key];
+            if (is_array($currentPath['uri'])) {
+                foreach ($currentPath['uri'] as $currentURI) {
+                    if ($this->isCorrectPath($currentURI, $uri)) {
+                        $this->useRoute(new Route($currentPath));
+                        return true;
+                    }
+                }
+            } else {
+                if ($this->isCorrectPath($currentPath['uri'], $uri)) {
+                    $this->useRoute(new Route($currentPath));
+                    return true;
+                }
             }
         }
 
@@ -73,27 +84,27 @@ class Router
     }
 
     /**
-     * @param array $currentPath
-     * @param $uri
-     * @return bool|Route
+     * @param string $currentURI
+     * @param string $uri
+     * @return bool
      * @throws InvalidURIException
      */
-    private function checkSinglePath(array $currentPath, string $uri)
+    private function isCorrectPath(string $currentURI, string $uri)
     {
-        if (substr($currentPath['uri'], 0, 1) == $this->delimiter) // 'uri' is an expression
+        if (substr($currentURI, 0, 1) == $this->delimiter) // 'uri' is an expression
         {
             // Check if expression syntax is valid :
-            if (substr($currentPath['uri'], strlen($currentPath['uri']) - 1, 1) != $this->delimiter) {
+            if (substr($currentURI, strlen($currentURI) - 1, 1) != $this->delimiter) {
                 throw new InvalidURIException('Expression that starts with ~ must also end with ~', 1001);
             }
-            $expression = $currentPath['uri'];
+            $expression = $currentURI;
         } else // 'uri' is directly the requested URI
         {
-            $expression = $this->delimiter . '^' . $currentPath['uri'] . '$' . $this->delimiter;
+            $expression = $this->delimiter . '^' . $currentURI . '$' . $this->delimiter;
         }
 
         if (preg_match($expression, $uri)) {
-            return new Route($currentPath);
+            return true;
         }
 
         return false;
@@ -111,11 +122,20 @@ class Router
     }
 
     /**
-     * @param string $uri
-     * @return string
+     * @param string|array $uri
+     * @return string|array
      */
-    public function removeURIParams(string $uri): string
+    public function removeURIParams($uri)
     {
+        if (is_array($uri)) {
+            $cleanUri = [];
+            foreach ($uri as $key => $singleUri) {
+                $cleanUri[$key] = $this->removeURIParams($singleUri);
+            }
+
+            return $cleanUri;
+        }
+
         if (!strpos($uri, '?')) {
             return $uri;
         }

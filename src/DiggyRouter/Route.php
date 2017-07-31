@@ -12,11 +12,6 @@ class Route
     /**
      * @var string
      */
-    private $uri;
-
-    /**
-     * @var string
-     */
     private $controller;
 
     /**
@@ -30,9 +25,8 @@ class Route
      * Route constructor.
      * @param array $routeData
      */
-    public function __construct($routeData)
+    public function __construct(array $routeData)
     {
-        $this->loadAttribute('uri', $routeData);
         $this->loadAttribute('controller', $routeData);
         $this->loadAttribute('action', $routeData);
     }
@@ -40,7 +34,7 @@ class Route
     /**
      * @return string
      */
-    public function getController()
+    public function getController(): string
     {
         return $this->controller;
     }
@@ -48,7 +42,7 @@ class Route
     /**
      * @return string
      */
-    public function getAction()
+    public function getAction(): string
     {
         return $this->action;
     }
