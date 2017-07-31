@@ -11,26 +11,42 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Router
 {
+    /**
+     * @var string
+     */
     private $routingFile;
+
+    /**
+     * @var array
+     */
     private $routingData;
+
+    /**
+     * @var array
+     */
     private $defaultValues = ['action' => 'render'];
+
+    /**
+     * @var string
+     */
+    private $delimiter = '~';
 
     /**
      * @param string $routingFile
      */
-    public function loadRoutes($routingFile)
+    public function loadRoutes(string $routingFile)
     {
         $this->routingFile = $routingFile;
         $this->routingData = Yaml::parse(file_get_contents($routingFile));
     }
 
     /**
+     * @param string $uri
      * @return bool
      */
-    public function handleRequest($uri = null)
+    public function handleRequest(string $uri = null): bool
     {
-        if(is_null($uri))
-        {
+        if (is_null($uri)) {
             $uri = $_SERVER['REQUEST_URI'];
         }
 
@@ -42,23 +58,51 @@ class Router
     /**
      * @param string $uri
      * @return bool
+     * @throws InvalidURIException
      */
-    public function matchURI($uri)
+    public function matchURI(string $uri): bool
     {
-        $key = array_search($uri, array_column($this->routingData['routes'], 'uri'));
-        if($key !== false)
-        {
-            $route = new Route($this->routingData['routes'][$key]);
-            $this->useRoute($route);
-            return true;
+        foreach ($this->routingData['routes'] as $key => $path) {
+            if ($route = $this->checkSinglePath($this->routingData['routes'][$key], $uri)) {
+                $this->useRoute($route);
+                return true;
+            }
         }
+
+        return false;
+    }
+
+    /**
+     * @param array $currentPath
+     * @param $uri
+     * @return bool|Route
+     * @throws InvalidURIException
+     */
+    private function checkSinglePath(array $currentPath, string $uri)
+    {
+        if (substr($currentPath['uri'], 0, 1) == $this->delimiter) // 'uri' is an expression
+        {
+            // Check if expression syntax is valid :
+            if (substr($currentPath['uri'], strlen($currentPath['uri']) - 1, 1) != $this->delimiter) {
+                throw new InvalidURIException('Expression that starts with ~ must also end with ~', 1001);
+            }
+            $expression = $currentPath['uri'];
+        } else // 'uri' is directly the requested URI
+        {
+            $expression = $this->delimiter . '^' . $currentPath['uri'] . '$' . $this->delimiter;
+        }
+
+        if (preg_match($expression, $uri)) {
+            return new Route($currentPath);
+        }
+
         return false;
     }
 
     /**
      * @param Route $route
      */
-    private function useRoute($route)
+    private function useRoute(Route $route)
     {
         $toCreate = $route->getController();
         $controller = new $toCreate();
@@ -70,11 +114,36 @@ class Router
      * @param string $uri
      * @return string
      */
-    public function removeURIParams($uri)
+    public function removeURIParams(string $uri): string
     {
-        if(!strpos($uri, '?')) {
+        if (!strpos($uri, '?')) {
             return $uri;
         }
-        return strstr ( $uri , '?', true);
+
+        return strstr($uri, '?', true);
+    }
+
+    /**
+     * @param string $action
+     */
+    public function setDefaultAction(string $action)
+    {
+        $this->defaultValues['action'] = $action;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDelimiter(): string
+    {
+        return $this->delimiter;
+    }
+
+    /**
+     * @param string $delimiter
+     */
+    public function setDelimiter(string $delimiter)
+    {
+        $this->delimiter = $delimiter;
     }
 }
