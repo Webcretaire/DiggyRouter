@@ -40,9 +40,9 @@ class Route
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getAction(): string
+    public function getAction()
     {
         return $this->action;
     }
