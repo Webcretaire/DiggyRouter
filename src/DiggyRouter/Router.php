@@ -91,12 +91,7 @@ class Router
      */
     private function isCorrectPath(string $currentURI, string $uri): bool
     {
-        if (substr($currentURI, 0, 1) == $this->delimiter) // $currentURI is an expression
-        {
-            // Check if expression syntax is valid :
-            if (substr($currentURI, strlen($currentURI) - 1, 1) != $this->delimiter) {
-                throw new InvalidURIException('Expression that starts with ~ must also end with ~', 1001);
-            }
+        if ($this->isExpressionURI($currentURI)) {
             $expression = $currentURI;
         } else // currentURI is directly the requested URI
         {
@@ -165,5 +160,25 @@ class Router
     public function setDelimiter(string $delimiter)
     {
         $this->delimiter = $delimiter;
+    }
+
+    /**
+     * @param string $uri
+     * @return bool
+     * @throws InvalidURIException
+     */
+    public function isExpressionURI($uri)
+    {
+        if (substr($uri, 0, 1) == $this->delimiter) // $currentURI is an expression
+        {
+            // Check if expression syntax is valid :
+            if (substr($uri, strlen($uri) - 1, 1) != $this->delimiter) {
+                throw new InvalidURIException('Expression that starts with ~ must also end with ~', 1001);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 }
