@@ -1,0 +1,19 @@
+# Routing file for testing purposes
+
+routes:
+  - uri: '/'
+    controller: 'DiggyRouter\Tests\Resources\DummyClass'
+
+  - uri: '/customAction'
+    controller: 'DiggyRouter\Tests\Resources\DummyClass'
+    action: 'customAction'
+
+  - uri: '~^/expression-([0-9]+)-~'
+    controller: 'DiggyRouter\Tests\Resources\DummyClass'
+    action: 'expression'
+
+  - uri:
+      - '/multipleURI1'
+      - '/multipleURI2'
+    controller: 'DiggyRouter\Tests\Resources\DummyClass'
+    action: 'multipleURI'

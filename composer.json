@@ -15,7 +15,11 @@
     },
     "autoload": {
         "psr-4": {
-            "DiggyRouter\\": "src/DiggyRouter"
+            "DiggyRouter\\": "src/DiggyRouter",
+            "DiggyRouter\\Tests\\": "tests/DiggyRouter"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.2"
     }
 }
