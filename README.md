@@ -13,7 +13,7 @@ Currently the only way of installing is via composer :
 composer require webcretaire/diggy-router
 ```
 
-## Usage
+## Basic Usage
 First you have to register the routes you want to use in a YAML file with the following structure :
 ````yaml
 routes:
@@ -42,8 +42,32 @@ Use the router to call the correct function in the correct controller according 
 ````php
 $router->handleRequest();
 ````
+
+## Advanced usage
+
 By default the router tries to find a route that matches the requested URI which is stored in 
 ```$_SERVER['REQUEST_URI']```, but you can specify the URI to use by passing it to the function :
 ````php
 $router->handleRequest($customURI);
 ````
+
+DiggyRouter now supports multiple URIs for one route, you just have define the ```uri``` parameter of your route as an array :
+````yaml
+routes:
+  - uri: 
+      - '/firstPage'
+      - '/secondPage'
+    controller: 'Name\Of\A\Class'
+    action: 'nameOfTheFunctionToCall'
+  # ...
+````
+
+If you have complex URIs, you can specify an expression that the requested URI must match. The default delimiter is '~' but you can specify which one to use by doing :
+
+````php
+$router->setDelimiter('YourDelimiter');
+````
+
+## Examples
+
+You can see a full example in this [routing file](tests/DiggyRouter/Resources/routing.yml)
