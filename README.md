@@ -1,4 +1,10 @@
 # DiggyRouter
+
+[![Latest Stable Version](https://poser.pugx.org/webcretaire/diggy-router/version)](https://packagist.org/packages/webcretaire/diggy-router)
+[![Total Downloads](https://poser.pugx.org/webcretaire/diggy-router/downloads)](https://packagist.org/packages/webcretaire/diggy-router)
+[![License](https://poser.pugx.org/webcretaire/diggy-router/license)](https://packagist.org/packages/webcretaire/diggy-router)
+
+
 Simple routing component for php
 
 ## Installation
