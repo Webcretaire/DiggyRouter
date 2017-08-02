@@ -3,7 +3,7 @@
 [![Latest Stable Version](https://poser.pugx.org/webcretaire/diggy-router/version)](https://packagist.org/packages/webcretaire/diggy-router)
 [![Total Downloads](https://poser.pugx.org/webcretaire/diggy-router/downloads)](https://packagist.org/packages/webcretaire/diggy-router)
 [![License](https://poser.pugx.org/webcretaire/diggy-router/license)](https://packagist.org/packages/webcretaire/diggy-router)
-
+[![Build Status](https://travis-ci.org/Webcretaire/DiggyRouter.svg?branch=master)](https://travis-ci.org/Webcretaire/DiggyRouter)
 
 Simple routing component for php
 
