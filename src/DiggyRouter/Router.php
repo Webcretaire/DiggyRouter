@@ -49,7 +49,7 @@ class Router
      */
     private function handleIncludes(array $routingData, string $routingFile)
     {
-        if (array_key_exists('includes', $routingData)) {
+        if (isset($routingData['includes'])) {
             foreach ($routingData['includes'] as $includedFile) {
                 if (substr($includedFile, 0, 1) === '/') // Absolute path
                 {
@@ -61,6 +61,11 @@ class Router
 
                 $newData = Yaml::parse(file_get_contents($newRoutingFile));
                 $newData = $this->handleIncludes($newData, $newRoutingFile);
+
+                if (!isset($routingData['routes'])) {
+                    $routingData['routes'] = [];
+                }
+
                 $routingData['routes'] = array_merge($routingData['routes'], $newData['routes']);
             }
 
