@@ -207,7 +207,7 @@ class Router
         {
             // Check if expression syntax is valid :
             if (substr($uri, strlen($uri) - 1, 1) != $this->delimiter) {
-                throw new InvalidURIException('Expression that starts with ' . $this->delimiter . ' must also end with ' . $this->delimiter, 1001);
+                throw new InvalidURIException('Expression that starts with ~ must also end with ~', 1001);
             }
 
             return true;
