@@ -1,5 +1,8 @@
 # Routing file for testing purposes
 
+includes:
+  - 'other_routing.yml'
+
 routes:
   - uri: '/'
     controller: 'DiggyRouter\Tests\Resources\DummyClass'

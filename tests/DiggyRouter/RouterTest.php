@@ -57,6 +57,14 @@ class RouterTest extends TestCase
                     'controller' => 'DiggyRouter\Tests\Resources\DummyClass',
                     'action' => 'multipleURI'
                 ],
+                [
+                    'uri' => '/otherRouting',
+                    'controller' => 'DiggyRouter\Tests\Resources\DummyClass',
+                ],
+                [
+                    'uri' => '/otherRouting2',
+                    'controller' => 'DiggyRouter\Tests\Resources\DummyClass',
+                ],
             ]
         ], 'routingData', $this->router);
     }
