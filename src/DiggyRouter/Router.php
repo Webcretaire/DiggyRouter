@@ -39,6 +39,35 @@ class Router
     {
         $this->routingFile = $routingFile;
         $this->routingData = Yaml::parse(file_get_contents($routingFile));
+        $this->routingData = $this->handleIncludes($this->routingData, $this->routingFile);
+    }
+
+    /**
+     * @param array $routingData
+     * @param string $routingFile
+     * @return array
+     */
+    private function handleIncludes(array $routingData, string $routingFile)
+    {
+        if (array_key_exists('includes', $routingData)) {
+            foreach ($routingData['includes'] as $includedFile) {
+                if (substr($includedFile, 0, 1) === '/') // Absolute path
+                {
+                    $newRoutingFile = $includedFile;
+                } else // Relative path
+                {
+                    $newRoutingFile = dirname($routingFile) . '/' . $includedFile;
+                }
+
+                $newData = Yaml::parse(file_get_contents($newRoutingFile));
+                $newData = $this->handleIncludes($newData, $newRoutingFile);
+                $routingData['routes'] = array_merge($routingData['routes'], $newData['routes']);
+            }
+
+            unset($routingData['includes']);
+        }
+
+        return $routingData;
     }
 
     /**

@@ -68,6 +68,28 @@ If you have complex URIs, you can specify an expression that the requested URI m
 $router->setDelimiter('YourDelimiter');
 ````
 
+If you have a lot of URIs, you can split your routing file linked by one main routing file :
+
+````yaml
+# Main routing file
+includes:
+  - 'secondRoutingFile'
+  - 'thirdRoutingFile'
+
+routes:
+  - uri: '/SomeAdditionnalRoutes'
+    controller: 'Name\Of\A\Class'
+  # ...
+````
+
+````yaml
+# Second routing file
+routes:
+  - uri: '/RoutesEverywhere'
+    controller: 'Name\Of\A\Class'
+  # ...
+````
+
 ## Examples
 
 You can see a full example in this [routing file](tests/DiggyRouter/Resources/routing.yml)
