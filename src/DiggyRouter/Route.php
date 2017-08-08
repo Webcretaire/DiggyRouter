@@ -42,7 +42,7 @@ class Route
     /**
      * @return string|null
      */
-    public function getAction()
+    public function getAction(): ?string
     {
         return $this->action;
     }
