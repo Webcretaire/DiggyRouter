@@ -68,7 +68,7 @@ If you have complex URIs, you can specify an expression that the requested URI m
 $router->setDelimiter('YourDelimiter');
 ````
 
-If you have a lot of URIs, you can split your routing file linked by one main routing file :
+If you have a lot of URIs, you can split your routes between one main routing file and as many secondary files as you want :
 
 ````yaml
 # Main routing file
