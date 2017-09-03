@@ -97,18 +97,17 @@ class Router
      */
     public function matchURI(string $uri): bool
     {
-        foreach ($this->routingData['routes'] as $key => $path) {
-            $currentPath = $this->routingData['routes'][$key];
-            if (is_array($currentPath['uri'])) {
-                foreach ($currentPath['uri'] as $currentURI) {
+        foreach ($this->routingData['routes'] as $path) {
+            if (is_array($path['uri'])) {
+                foreach ($path['uri'] as $currentURI) {
                     if ($this->isCorrectPath($currentURI, $uri)) {
-                        $this->useRoute(new Route($currentPath));
+                        $this->useRoute(new Route($path));
                         return true;
                     }
                 }
             } else {
-                if ($this->isCorrectPath($currentPath['uri'], $uri)) {
-                    $this->useRoute(new Route($currentPath));
+                if ($this->isCorrectPath($path['uri'], $uri)) {
+                    $this->useRoute(new Route($path));
                     return true;
                 }
             }
@@ -211,6 +210,50 @@ class Router
             }
 
             return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function path($name)
+    {
+        echo $this->getPath($name);
+    }
+
+
+    public function getPath($name)
+    {
+        foreach ($this->routingData['routes'] as $path) {
+            if (isset($path['name']) && $name == $path['name']) {
+                if ($uri = $this->getNonRegexURI($path)) {
+                    return $uri;
+                }
+                throw new UnhandledException("Can't generate Regex URIs yet", 1003);
+            }
+        }
+
+        throw new NotFoundException("No URI with this name", 1002);
+    }
+
+    /**
+     * @param array $route
+     * @return bool|string
+     */
+    private function getNonRegexURI(array $route)
+    {
+        if (is_array($route['uri'])) {
+            foreach ($route['uri'] as $uri) {
+                if (!$this->isExpressionURI($uri)) {
+                    return $uri;
+                }
+            }
+        } else {
+            if (!$this->isExpressionURI($route['uri'])) {
+                return $route['uri'];
+            }
         }
 
         return false;
