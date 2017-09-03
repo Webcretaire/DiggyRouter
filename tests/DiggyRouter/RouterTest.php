@@ -3,7 +3,9 @@
 namespace DiggyRouter\Tests;
 
 use DiggyRouter\InvalidURIException;
+use DiggyRouter\NotFoundException;
 use DiggyRouter\Router;
+use DiggyRouter\UnhandledException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -36,6 +38,7 @@ class RouterTest extends TestCase
         $this->assertAttributeEquals([
             'routes' => [
                 [
+                    'name' => 'homepage',
                     'uri' => '/',
                     'controller' => 'DiggyRouter\Tests\Resources\DummyClass',
                 ],
@@ -45,11 +48,13 @@ class RouterTest extends TestCase
                     'action' => 'customAction'
                 ],
                 [
+                    'name' => 'expression_uri',
                     'uri' => '~^/expression-([0-9]+)-~',
                     'controller' => 'DiggyRouter\Tests\Resources\DummyClass',
                     'action' => 'expression'
                 ],
                 [
+                    'name' => 'multiple_uri',
                     'uri' => [
                         '/multipleURI1',
                         '/multipleURI2',
@@ -100,6 +105,29 @@ class RouterTest extends TestCase
         $this->assertEquals('MultipleURIing', $this->useURI('/multipleURI2'));
 
         $this->assertFalse($this->router->handleRequest('/fakeURI'));
+    }
+
+    /**
+     * @covers Router::getPath
+     */
+    public function testGetPath()
+    {
+        $this->router->loadRoutes(__DIR__ . "/Resources/routing.yml");
+
+        $this->assertEquals('/', $this->router->getPath('homepage'));
+        $this->assertEquals('/multipleURI1', $this->router->getPath('multiple_uri'));
+        try {
+            $this->router->getPath('fake_name');
+            $this->assertEquals(1, 2); // No exception -> problem
+        } catch (NotFoundException $ex) {
+            $this->assertEquals(1, 1); // Exception thrown -> good result
+        }
+        try {
+            $this->router->getPath('expression_uri');
+            $this->assertEquals(1, 2); // No exception -> problem
+        } catch (UnhandledException $ex) {
+            $this->assertEquals(1, 1); // Exception thrown -> good result
+        }
     }
 
     /**

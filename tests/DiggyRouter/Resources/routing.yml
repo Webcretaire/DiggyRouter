@@ -4,18 +4,21 @@ includes:
   - 'other_routing.yml'
 
 routes:
-  - uri: '/'
+  - name: 'homepage'
+    uri: '/'
     controller: 'DiggyRouter\Tests\Resources\DummyClass'
 
   - uri: '/customAction'
     controller: 'DiggyRouter\Tests\Resources\DummyClass'
     action: 'customAction'
 
-  - uri: '~^/expression-([0-9]+)-~'
+  - name: 'expression_uri'
+    uri: '~^/expression-([0-9]+)-~'
     controller: 'DiggyRouter\Tests\Resources\DummyClass'
     action: 'expression'
 
-  - uri:
+  - name: 'multiple_uri'
+    uri:
       - '/multipleURI1'
       - '/multipleURI2'
     controller: 'DiggyRouter\Tests\Resources\DummyClass'
