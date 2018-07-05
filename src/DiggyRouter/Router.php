@@ -7,7 +7,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Class Router
  *
- * @author Julien EMMANUEL <JuEm0406@gmail.com>
+ * @author  Julien EMMANUEL <JuEm0406@gmail.com>
  * @package DiggyRouter
  */
 class Router
@@ -78,6 +78,7 @@ class Router
     /**
      * @param string $uri
      * @return bool
+     * @throws InvalidURIException
      */
     public function handleRequest(string $uri = null): bool
     {
@@ -124,12 +125,10 @@ class Router
      */
     private function isCorrectPath(string $currentURI, string $uri): bool
     {
-        if ($this->isExpressionURI($currentURI)) {
+        if ($this->isExpressionURI($currentURI))
             $expression = $currentURI;
-        } else // currentURI is directly the requested URI
-        {
+        else // currentURI is directly the requested URI
             $expression = $this->delimiter . '^' . $currentURI . '$' . $this->delimiter;
-        }
 
         if (preg_match($expression, $uri)) {
             return true;
@@ -143,10 +142,13 @@ class Router
      */
     private function useRoute(Route $route)
     {
-        $toCreate = $route->getController();
-        $controller = new $toCreate();
-        $toPerform = !is_null($route->getAction()) ? $route->getAction() : $this->defaultValues['action'];
-        $controller->$toPerform();
+        $toCreate        = $route->getController();
+        $controller      = new $toCreate();
+        $toPerform       = !is_null($route->getAction()) ? $route->getAction() : $this->defaultValues['action'];
+        $effectiveParams = [];
+        foreach ($route->getParams() as $param)
+            $effectiveParams[] = isset($_REQUEST[$param]) ? $_REQUEST[$param] : null;
+        call_user_func_array([$controller, $toPerform], $effectiveParams);
     }
 
     /**
@@ -217,13 +219,20 @@ class Router
 
     /**
      * @param string $name
+     * @throws NotFoundException
+     * @throws UnhandledException
      */
     public function path($name)
     {
         echo $this->getPath($name);
     }
 
-
+    /**
+     * @param $name
+     * @return bool|string
+     * @throws NotFoundException
+     * @throws UnhandledException
+     */
     public function getPath($name)
     {
         foreach ($this->routingData['routes'] as $path) {
@@ -241,6 +250,7 @@ class Router
     /**
      * @param array $route
      * @return bool|string
+     * @throws InvalidURIException
      */
     private function getNonRegexURI(array $route)
     {

@@ -19,6 +19,11 @@ class Route
      */
     private $action;
 
+    /**
+     * @var array
+     */
+    private $params = [];
+
     use DataFromYAMLTrait;
 
     /**
@@ -29,6 +34,7 @@ class Route
     {
         $this->loadAttribute('controller', $routeData);
         $this->loadAttribute('action', $routeData);
+        $this->loadAttribute('params', $routeData);
     }
 
     /**
@@ -45,5 +51,13 @@ class Route
     public function getAction()
     {
         return $this->action;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getParams()
+    {
+        return $this->params;
     }
 }
